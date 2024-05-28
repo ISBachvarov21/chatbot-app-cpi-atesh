@@ -28,7 +28,7 @@ print(f'\033[1;32m[+] Text found: {text}\033[0m\n')
 print(f'\033[1;34m[*] Trying to write the text to data/scraped/data.txt...\033[0m')
 
 try:
-    with open('data/scraped/data.txt', 'w', encoding='utf-8') as file:
+    with open('../data/scraped/data.txt', 'w', encoding='utf-8') as file:
         file.write(text)
     print(f'\033[1;32m[+] Text written to file successfully!\033[0m')
 except Exception as e:
