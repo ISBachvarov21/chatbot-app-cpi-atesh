@@ -17,6 +17,9 @@ module.exports = {
       },
     },
     extend: {
+      backgroundImage: {
+        "radial-gradient-home" : "conic-gradient(from 202deg at 81.78% 23.22%, #8729F2 0deg, #13C6FF 125.62500357627869deg, #B94DFB 215.62499284744263deg, #FF53EE 294.3749928474426deg, #F3B960 360deg)"
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
