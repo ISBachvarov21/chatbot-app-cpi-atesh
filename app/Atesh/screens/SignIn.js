@@ -2,9 +2,7 @@ import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   StyleSheet,
-  View,
   TouchableOpacity,
-  Image,
   Platform,
   StatusBar,
   Text,
@@ -13,7 +11,7 @@ import {
 
 export default function SignIn({ navigation }) {
   return (
-    <LinearGradient colors={["#FF686B", "#7678ED"]} style={styles.container}>
+    <LinearGradient colors={["#FF686B", "#7678ED"]} style={styles.screen}>
       <Text style={styles.regText}>Let's Sign In!</Text>
       <TextInput
         placeholder="Username"
@@ -25,7 +23,7 @@ export default function SignIn({ navigation }) {
         placeholderTextColor={"black"}
         style={styles.inputs}
       />
-      <TouchableOpacity style={styles.signinButton}>
+      <TouchableOpacity style={styles.signinButton} onPress={() => navigation.navigate("Chats")}>
         <Text>Sign in!</Text>
       </TouchableOpacity>
     </LinearGradient>
@@ -33,7 +31,7 @@ export default function SignIn({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     alignItems: "center",
@@ -49,7 +47,7 @@ const styles = StyleSheet.create({
   },
   regText: {
     fontSize: 40,
-    color:"white"
+    color: "white"
   },
   logText: {
     color: "blue",

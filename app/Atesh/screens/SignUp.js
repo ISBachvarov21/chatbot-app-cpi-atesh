@@ -13,7 +13,7 @@ import {
 
 export default function SignUp({ navigation }) {
   return (
-    <LinearGradient colors={["#FF686B", "#7678ED"]} style={styles.container}>
+    <LinearGradient colors={["#FF686B", "#7678ED"]} style={styles.screen}>
       <Text style={styles.regText}>Let's Sign Up!</Text>
       <Text style={styles.logQuest}>
         Already have an account?{" "}
@@ -45,7 +45,7 @@ export default function SignUp({ navigation }) {
         placeholderTextColor={"black"}
         style={styles.inputs}
       />
-      <TouchableOpacity style={styles.signupButton}>
+      <TouchableOpacity style={styles.signupButton} onPress={() => navigation.navigate("Chats")} >
         <Text>Sign up!</Text>
       </TouchableOpacity>
     </LinearGradient>
@@ -53,7 +53,7 @@ export default function SignUp({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     alignItems: "center",
@@ -69,14 +69,14 @@ const styles = StyleSheet.create({
   },
   regText: {
     fontSize: 40,
-    color:"white",
+    color: "white",
   },
   logText: {
     color: "blue",
   },
   logQuest: {
     fontSize: 20,
-    color:"white"
+    color: "white"
   },
   signupButton: {
     backgroundColor: "#32CD32",
