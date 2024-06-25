@@ -23,25 +23,32 @@ export default function Chat() {
 
     let [message, setMessage] = useState<string>("");
 
-    const [selectedChat, setSelectedChat] = useState<ChatType | undefined>(
+    const [selectedChat, setSelectedChat] = useState<ChatType>(
         {
         "name": "Atesh ma maiko", 
         "messages": [
                 {
                     "author": "USER",
-                    "content": "Skibidi, skibidi on the wall, who's the gyattest of them all"
+                    "content": "This is an example user promp"
                 },
                 {
                     "author": "AI",
-                    "content": "Ivaylo"
+                    "content": "This is an example ai response"
                 },
             ]
      
         }
     )
 
-    const handelNewMessage = (e: any) => {
+    const handelNewMessage = (e: React.FormEvent<HTMLElement>) => {
         e.preventDefault();
+
+        setSelectedChat({
+                "name": selectedChat.name,
+                "messages": [...selectedChat?.messages, {author: "USER", content: message}]
+            })
+
+        setMessage("")
     };
 
     return (
@@ -127,7 +134,8 @@ export default function Chat() {
                     >
                         <Textarea
                             onChange={(e) => setMessage(e.target.value)}
-                            className="resize-none border-none outline-none focus:outline-none"
+                            className="resize-none border-none outline-none focus:outline-none text-white"
+                            value={message}
                         />
                         <Button
                             size="icon"
