@@ -23,6 +23,8 @@ export default function Chat() {
 
     let [message, setMessage] = useState<string>("");
 
+    const [isNavHidden, setIsNavHidden] = useState<boolean>(false)
+
     const [selectedChat, setSelectedChat] = useState<ChatType>(
         {
         "name": "Atesh ma maiko", 
@@ -53,15 +55,25 @@ export default function Chat() {
 
     return (
         <>
-            <div
+                 <div onClick={() => {setIsNavHidden(false)}} className="absolute top-5 flex flex-col gap-1 left-3 z-10 w-10 lg:hidden cursor-pointer transition-transform duration-75 hover:scale-105 active:scale-100">
+                    <div className="w-full bg-black h-1 rounded-2xl"></div>
+                    <div className="w-full bg-black h-1 rounded-2xl"></div>
+                    <div className="w-full bg-black h-1 rounded-2xl"></div>
+                </div>           
+        <div
                 className={`min-w-screen overflow-hidden h-screen bg-gradient-to-b bg-gray-300 flex`}
             >
                 <div
-                    className={`w-1/5  bg-gray-900 text-white min-h-[80%] items-center flex flex-col my-5 ml-5 rounded-2xl`}
+                    className={`w-1/5  bg-gray-900 text-white min-h-[80%] items-center flex flex-col my-5 ml-5 z-20 rounded-2xl max-lg:absolute max-lg:h-screen max-lg:w-screen max-lg:m-0 max-lg:rounded-none ${isNavHidden? 'max-lg:hidden': 'block'}`}
                 >
                     <div className="w-[90%] h-full mt-12 flex flex-col items-center">
-                        <div className="flex gap-4 items-center border border-pink-50 w-full p-2 px- 4 rounded-[36px]">
-                            <Avatar>
+                        <div onClick={() => {setIsNavHidden(true)}} className="absolute top-5 right-3 w-10 lg:hidden cursor-pointer transition-transform duration-75 hover:scale-105 active:scale-100 h-8">
+                            <div className="w-full bg-white h-1 rotate-45 translate-y-2 rounded-2xl"></div>
+                            <div className="w-full bg-white h-1 -rotate-45 translate-y-1 rounded-2xl"></div>
+                        </div>
+
+                        <div className="flex gap-4 items-center border border-pink-50 w-full p-2 px-4 rounded-[36px] max-lg:mt-5">
+                            <Avatar className="text-black">
                                 <AvatarImage src="" />
                                 <AvatarFallback>IS</AvatarFallback>
                             </Avatar>
@@ -117,9 +129,9 @@ export default function Chat() {
                         </ScrollArea>
                     </div>
                 </div>
-                <div className="w-4/5 min-h-[80%] items-center flex flex-col m-5 relative rounded-2xl text-white">
+                <div className="w-4/5 max-lg:w-full min-h-[80%] items-center flex flex-col m-5 relative rounded-2xl text-white">
 
-                    <div className={`text-white w-full h-5/6 flex flex-col p-16 gap-6`}>
+                    <div className={`text-white w-full h-5/6 flex flex-col p-4 pt-10 lg:p-16 gap-6`}>
                         {
                             selectedChat?.messages.map((item: MessageType) => {
                                 return <ResponseMessage author={item.author} content={item.content} />
@@ -130,11 +142,11 @@ export default function Chat() {
 
                     <form
                         onSubmit={handelNewMessage}
-                        className={`bg-gray-900 text-black w-[70%] h-[12%] rounded-xl flex gap-5 p-6 items-center`}
+                        className={`bg-gray-900 text-black w-[70%] h-[15%] rounded-xl max-lg:w-full flex gap-5 p-6 items-center`}
                     >
                         <Textarea
                             onChange={(e) => setMessage(e.target.value)}
-                            className="resize-none border-none outline-none focus:outline-none text-white"
+                            className="resize-none border-none outline-none h-full focus:outline-none text-white"
                             value={message}
                         />
                         <Button
