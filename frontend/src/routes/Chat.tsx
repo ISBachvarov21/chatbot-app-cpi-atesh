@@ -23,7 +23,7 @@ export default function Chat() {
 
     let [message, setMessage] = useState<string>("");
 
-    const [isNavHidden, setIsNavHidden] = useState<boolean>(false)
+    const [isNavHidden, setIsNavHidden] = useState<boolean>(true)
 
     const [selectedChat, setSelectedChat] = useState<ChatType>(
         {
@@ -37,6 +37,14 @@ export default function Chat() {
                     "author": "AI",
                     "content": "This is an example ai response"
                 },
+                {
+                    "author": "USER",
+                    "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                },
+                {
+                    "author": "USER",
+                    "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                }
             ]
      
         }
@@ -55,18 +63,18 @@ export default function Chat() {
 
     return (
         <>
-                 <div onClick={() => {setIsNavHidden(false)}} className="absolute top-5 flex flex-col gap-1 left-3 z-10 w-10 lg:hidden cursor-pointer transition-transform duration-75 hover:scale-105 active:scale-100">
-                    <div className="w-full bg-black h-1 rounded-2xl"></div>
-                    <div className="w-full bg-black h-1 rounded-2xl"></div>
-                    <div className="w-full bg-black h-1 rounded-2xl"></div>
-                </div>           
-        <div
-                className={`min-w-screen overflow-hidden h-screen bg-gradient-to-b bg-gray-300 flex`}
+            <div onClick={() => {setIsNavHidden(false)}} className="fixed top-5 flex flex-col gap-1 left-3 z-10 w-10 lg:hidden cursor-pointer transition-transform duration-75 hover:scale-105 active:scale-100">
+                <div className="w-full bg-black h-1 rounded-2xl"></div>
+                <div className="w-full bg-black h-1 rounded-2xl"></div>
+                <div className="w-full bg-black h-1 rounded-2xl"></div>
+            </div>           
+            <div
+            className={`min-w-screen overflow-x-hidden min-h-screen bg-gradient-to-b bg-gray-300 flex`}
             >
                 <div
                     className={`w-1/5  bg-gray-900 text-white min-h-[80%] items-center flex flex-col my-5 ml-5 z-20 rounded-2xl max-lg:absolute max-lg:h-screen max-lg:w-screen max-lg:m-0 max-lg:rounded-none ${isNavHidden? 'max-lg:hidden': 'block'}`}
                 >
-                    <div className="w-[90%] h-full mt-12 flex flex-col items-center">
+                    <div className="w-[90%] mt-12 flex flex-col items-center">
                         <div onClick={() => {setIsNavHidden(true)}} className="absolute top-5 right-3 w-10 lg:hidden cursor-pointer transition-transform duration-75 hover:scale-105 active:scale-100 h-8">
                             <div className="w-full bg-white h-1 rotate-45 translate-y-2 rounded-2xl"></div>
                             <div className="w-full bg-white h-1 -rotate-45 translate-y-1 rounded-2xl"></div>
@@ -131,7 +139,7 @@ export default function Chat() {
                 </div>
                 <div className="w-4/5 max-lg:w-full min-h-[80%] items-center flex flex-col m-5 relative rounded-2xl text-white">
 
-                    <div className={`text-white w-full h-5/6 flex flex-col p-4 pt-10 lg:p-16 gap-6`}>
+                    <div className={`text-white mb-[25%] w-full min-h-full flex flex-col p-4 pt-10 lg:p-16 gap-6`}>
                         {
                             selectedChat?.messages.map((item: MessageType) => {
                                 return <ResponseMessage author={item.author} content={item.content} />
@@ -142,7 +150,7 @@ export default function Chat() {
 
                     <form
                         onSubmit={handelNewMessage}
-                        className={`bg-gray-900 text-black w-[70%] h-[15%] rounded-xl max-lg:w-full flex gap-5 p-6 items-center`}
+                        className={`bg-gray-900 fixed bottom-5 text-black w-[50%] z-10 h-[15%] rounded-xl max-lg:w-[90%] flex gap-5 p-6 items-center`}
                     >
                         <Textarea
                             onChange={(e) => setMessage(e.target.value)}
