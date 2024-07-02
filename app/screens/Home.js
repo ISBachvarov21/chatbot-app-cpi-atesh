@@ -15,7 +15,7 @@ import {
   SafeAreaView
 } from "react-native";
 
-export default function SignIn({ navigation }) {
+export default function Home({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   return (
 
@@ -35,7 +35,7 @@ export default function SignIn({ navigation }) {
               placeholder="Enter a title!"
               placeholderTextColor={"white"}
               style={styles.inputTitle} />
-            <Pressable style={styles.createBtn} onPress={() => navigation.navigate("ChatRoom")}>
+            <Pressable style={styles.createBtn} onPress={() => {navigation.navigate("ChatRoom"); setModalVisible(!modalVisible);}}>
               <Text style={styles.btnText}>Create Chat!</Text>
             </Pressable>
             <View>
