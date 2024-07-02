@@ -61,6 +61,19 @@ export default function Chat() {
         setMessage("")
     };
 
+    useEffect(() => {
+        if(!isNavHidden)
+        {
+            window.scroll(0, 0)
+            document.body.className = "overflow-hidden"
+            return
+        }
+
+        window.scroll(0, window.innerHeight)
+        document.body.classList.remove("overflow-hidden")
+
+    }, [isNavHidden])
+
     return (
         <>
             <div onClick={() => {setIsNavHidden(false)}} className="fixed top-5 flex flex-col gap-1 left-3 z-10 w-10 lg:hidden cursor-pointer transition-transform duration-75 hover:scale-105 active:scale-100">
@@ -72,9 +85,9 @@ export default function Chat() {
             className={`min-w-screen overflow-x-hidden min-h-screen bg-gradient-to-b bg-gray-300 flex`}
             >
                 <div
-                    className={`w-1/5  bg-gray-900 text-white min-h-[80%] items-center flex flex-col my-5 ml-5 z-20 rounded-2xl max-lg:absolute max-lg:h-screen max-lg:w-screen max-lg:m-0 max-lg:rounded-none ${isNavHidden? 'max-lg:hidden': 'block'}`}
+                    className={`w-1/5 bg-gray-900 text-white min-h-[80%] items-center flex flex-col my-5 ml-5 z-20 rounded-2xl max-lg:absolute max-lg:h-screen max-lg:w-screen max-lg:m-0 max-lg:rounded-none ${isNavHidden? 'max-lg:hidden': 'block'} `}
                 >
-                    <div className="w-[90%] mt-12 flex flex-col items-center">
+                    <div className={`w-[90%] mt-12 flex flex-col items-center `}>
                         <div onClick={() => {setIsNavHidden(true)}} className="absolute top-5 right-3 w-10 lg:hidden cursor-pointer transition-transform duration-75 hover:scale-105 active:scale-100 h-8">
                             <div className="w-full bg-white h-1 rotate-45 translate-y-2 rounded-2xl"></div>
                             <div className="w-full bg-white h-1 -rotate-45 translate-y-1 rounded-2xl"></div>
@@ -130,7 +143,7 @@ export default function Chat() {
                                 Clear All
                             </Button>
                         </div>
-                        <ScrollArea className="h-full flex flex-col overflow-auto">
+                        <ScrollArea className="h-full flex flex-col overflow-auto ">
                             {chatHistory.map((chat: any) => {
                                 return <ChatEntry chatTitle={chat[2]} />;
                             })}
@@ -150,7 +163,7 @@ export default function Chat() {
 
                     <form
                         onSubmit={handelNewMessage}
-                        className={`bg-gray-900 fixed bottom-5 text-black w-[50%] z-10 h-[15%] rounded-xl max-lg:w-[90%] flex gap-5 p-6 items-center`}
+                        className={`bg-gray-900 fixed bottom-5 text-black w-[50%] z-10 h-[100px] rounded-xl max-lg:w-[90%] flex gap-5 p-6 items-center`}
                     >
                         <Textarea
                             onChange={(e) => setMessage(e.target.value)}
