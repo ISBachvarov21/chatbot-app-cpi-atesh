@@ -23,6 +23,7 @@ export default function SignIn() {
         }
 
         userAPI.signIn(data).then((data) => {
+            navigator('/chat')
             localStorage.setItem('token', data.access_token)    
         })
     }

@@ -32,7 +32,10 @@ export default function SignUp() {
             password: passwordVal
         }
 
-        userAPI.signUp(data)
+        userAPI.signUp(data).then(() => {
+            navigator('/signin')
+        })
+            
     }
 
     return (
