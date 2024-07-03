@@ -1,6 +1,15 @@
 # Chatbot introduction
 Welcome to the CPI Chatbot App repository! 🤖💬
 
+# Team Members
+- Ivan Stoychev - Tech Leader
+- Ivaylo Bachvarov - Backend dev
+- Ivan Delchilov - Mobile app dev
+- Ivan Dochev - Backend dev
+- Iva Nedkova - Data analyst
+- Zafir Dinev - Data analyst
+- Emma Georgieva - Data analyst
+
 # Repository Setup
 - Create virtual environments to separate your project dependencies
   - Hint : you can use conda or pyenv
@@ -11,11 +20,11 @@ Welcome to the CPI Chatbot App repository! 🤖💬
     - More on pip freeze here : https://dev.to/eskabore/pip-freeze-requirementstxt-a-beginners-guide-5e2m
   
 # Architecture
-write text here ...
+-
 
 # Application
-write text here ...
+-
 
 # Ui
-write text here ...
+-
 
