@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { LucideCircleArrowOutDownRight, Search, Send } from "lucide-react";
+import { Search, Send } from "lucide-react";
 import { useState, useEffect } from "react";
 import ChatEntry from "@/components/ChatEntry";
 import { Textarea } from "@/components/ui/textarea";
