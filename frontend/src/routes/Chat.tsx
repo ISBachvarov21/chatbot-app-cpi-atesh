@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Search, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import ChatEntry from "@/components/ChatEntry";
 import { Textarea } from "@/components/ui/textarea";
@@ -38,12 +38,11 @@ export default function Chat() {
         userAPI.getUser().then((data) => {
             setUser(data);
         });
-    }, []);
-
-    useEffect(() => {
+        
         chatAPI.getChatHystory().then((data) => {
             setChatHistory(data.data.reverse());
         });
+
     }, []);
 
     useEffect(() => {
