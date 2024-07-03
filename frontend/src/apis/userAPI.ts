@@ -13,4 +13,7 @@ export const userAPI = {
     signIn: async (data: SignUpData) => {
         return (await axios.post('/login', data, axiosConfig)).data;
     },
+    getUser: async () => {
+        return (await axios.get('/get/user', axiosConfig)).data;
+    }
 };

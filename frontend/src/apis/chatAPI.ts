@@ -10,6 +10,12 @@ export const chatAPI = {
     },
     getChat: async (id: number | undefined) => {
         return (await axios.get(`/get/chat/${id}`, axiosConfig));
-    }
+    },
+    deleteAllChats: async () => {
+        return (await axios.delete('/delete/chats', axiosConfig));
+    },
+    deleteChat: async (id: number) => {
+        return (await axios.delete(`/delete/chat/${id}`, axiosConfig));
+    },
 };
 
