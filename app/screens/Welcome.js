@@ -7,7 +7,7 @@ import { View, Text, StyleSheet, Platform, StatusBar, TouchableOpacity, Image } 
 export default function Welcome({ navigation }) {
   return (
     <LinearGradient
-      colors={['#FF686B', '#7678ED']}
+      colors={['#BDC0C6', '#7678ED']}
       style={styles.screen}>
       <View style={styles.infoBox}>
         <Text style={styles.title}>ATESH</Text>
@@ -15,7 +15,6 @@ export default function Welcome({ navigation }) {
           industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled ndustry's standard </Text>
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("SignUp")}>
           <Text style={styles.buttonText}>Get started</Text>
-          <Image source={Scratch} />
         </TouchableOpacity>
       </View>
     </LinearGradient>
@@ -36,7 +35,7 @@ const styles = StyleSheet.create({
 
   },
   title: {
-    color: "orange",
+    color: "#020817",
     fontSize: 60
   },
   info: {
@@ -51,6 +50,11 @@ const styles = StyleSheet.create({
     marginBottom: 2
   },
   button: {
-    alignItems: "center"
+    alignItems: "center",
+    justifyContent:"center",
+    width:150,
+    height:50,
+    backgroundColor:"#0F172A",
+    borderRadius:10
   }
 });

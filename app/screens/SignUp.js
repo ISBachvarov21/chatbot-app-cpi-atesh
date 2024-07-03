@@ -1,4 +1,4 @@
-import React ,{useState} from "react";
+import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   StyleSheet,
@@ -11,51 +11,62 @@ import {
 } from "react-native";
 import { userAPI } from "../apis/userAPI";
 
-
 export default function SignUp({ navigation }) {
-  const [username, setUserName] = useState("")
-  const [password, setPassword] = useState("")
-  
-  
-  
-  const handleSignUp = () =>{
-    
+  const [username, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSignUp = () => {
     const data = {
-        username: username,
-        password: password
+      username: username,
+      password: password,
+    };
+
+    userAPI.signUp(data);
+    navigation.navigate("Home");
+  };
+
+  const checkIsEmptyTextInput = () => {
+    if (!username.trim()) {
+      alert("Please enter your username!");
+      return;
     }
-    
-    userAPI.signUp(data)
-    navigation.navigate("Home")
-  }
+    if (!password.trim()) {
+      alert("Please enter your password!");
+      return;
+    }
+    handleSignUp();
+  };
+
   return (
-    <LinearGradient colors={["#FF686B", "#7678ED"]} style={styles.screen}>
+    <LinearGradient colors={["#BDC0C6", "#7678ED"]} style={styles.screen}>
       <Text style={styles.regText}>Let's Sign Up!</Text>
-      <Text style={styles.logQuest}>
-        Already have an account?{" "}
+      <View style={styles.info}>
+        <Text style={styles.logQuest}>Already have an account?</Text>
         <Text
           style={styles.logText}
           onPress={() => navigation.navigate("SignIn")}
         >
           SignIn!
         </Text>
-      </Text>
-
+      </View>
+      
       <TextInput
         placeholder="Username"
-        placeholderTextColor={"black"}
+        placeholderTextColor={"#281D3A"}
         style={styles.inputs}
         onChangeText={setUserName}
-        
       />
       <TextInput
         placeholder="Password"
-        placeholderTextColor={"black"}
+        placeholderTextColor={"#281D3A"}
         style={styles.inputs}
         onChangeText={setPassword}
       />
-      <TouchableOpacity style={styles.signupButton} onPress={handleSignUp} >
-        <Text>Sign up!</Text>
+      <TouchableOpacity
+        style={styles.signupButton}
+        onPress={checkIsEmptyTextInput}
+      >
+        <Text style={styles.sigUpText}>Sign up!</Text>
       </TouchableOpacity>
     </LinearGradient>
   );
@@ -81,18 +92,27 @@ const styles = StyleSheet.create({
     color: "white",
   },
   logText: {
-    color: "blue",
+    color: "#8148CD",
+    marginLeft: 10,
+    fontSize:20
   },
   logQuest: {
     fontSize: 20,
-    color: "white"
+    color: "white",
   },
   signupButton: {
-    backgroundColor: "#32CD32",
+    backgroundColor: "#2F1D4D",
     width: 130,
     height: 40,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 100,
   },
+  sigUpText: {
+    color: "#C7ACEF",
+  },
+  info:{
+    flexDirection:"row",
+    alignItems:"center"
+  }
 });

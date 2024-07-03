@@ -7,6 +7,7 @@ import {
   StatusBar,
   Text,
   TextInput,
+  View
 } from "react-native";
 import { userAPI } from "../apis/userAPI";
 
@@ -25,26 +26,39 @@ export default function SignIn({ navigation }) {
         localStorage.setItem('token', data.access_token)    
     })
     navigation.navigate("Home")
+    console.log(data)
+  }
 
+  const checkIsEmptyTextInput  = () =>{
+    if(!username.trim()){
+        alert("Please enter your nqma!")
+        return
+    }
+    if(!password.trim()){
+      alert("Please enter your password!")
+      return
+    }
+    handleSignIn()
   }
 
   return (
-    <LinearGradient colors={["#FF686B", "#7678ED"]} style={styles.screen}>
+    <LinearGradient colors={['#BDC0C6', '#7678ED']} style={styles.screen}>
+
       <Text style={styles.regText}>Let's Sign In!</Text>
       <TextInput
         placeholder="Username"
-        placeholderTextColor={"black"}
+        placeholderTextColor={"#281D3A"}
         style={styles.inputs}
         onChangeText={setUserName}
       />
       <TextInput
         placeholder="Password"
-        placeholderTextColor={"black"}
+        placeholderTextColor={"#281D3A"}
         style={styles.inputs}
         onChangeText={setPassword}
       />
-      <TouchableOpacity style={styles.signinButton} onPress={handleSignIn}>
-        <Text>Sign in!</Text>
+      <TouchableOpacity style={styles.signinButton} onPress={checkIsEmptyTextInput}>
+        <Text style={styles.signText}>Sign in!</Text>
       </TouchableOpacity>
     </LinearGradient>
   );
@@ -76,11 +90,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   signinButton: {
-    backgroundColor: "#32CD32",
+    backgroundColor: "#2F1D4D",
     width: 130,
     height: 40,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 100,
+    
   },
+  signText:{
+    color:"#C7ACEF"
+  }
 });
