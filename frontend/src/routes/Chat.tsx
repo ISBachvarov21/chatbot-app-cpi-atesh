@@ -246,10 +246,10 @@ export default function Chat() {
                         className={`bg-gray-900 fixed bottom-5 text-black w-[50%] z-10 h-[100px] rounded-xl max-lg:w-[90%] flex gap-5 p-6 items-center`}
                     >
                         <Textarea
+                            onKeyDown={(e) => {if(e.key === "Enter") {formRef.current?.requestSubmit()}}}
                             onChange={(e) => {setMessage(e.target.value);}}
                             className="resize-none border-none outline-none h-full focus:outline-none text-white"
                             value={message}
-                            onKeyDown={(e) => {if(e.key === "Enter") {formRef.current?.dispatchEvent(new Event('submit'))}}}
                         />
                         <Button
                             size="icon"
