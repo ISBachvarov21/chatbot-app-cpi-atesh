@@ -13,53 +13,29 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { MessageType, ChatType } from "@/types/chat.type";
+import { MessageType, ChatType, ChatHystoryType } from "@/types/chat.type";
 import ResponseMessage from "@/components/ResponseMessage";
+import { chatAPI } from "@/apis/chatAPI";
+import { messagesAPI, Message } from "@/apis/messagesAPI";
 
 export default function Chat() {
     const [user, setUser] = useState<string>("User");
-    const [chatHistory, setChatHistory] = useState<any>([]);
+    const [chatHistory, setChatHistory] = useState<ChatHystoryType[]>([]);
     const [newChatName, setNewChatName] = useState<string>("");
+    const [isNewChatOpened, setIsNewChatOpened] = useState<boolean>(false);
+    const [chatIdSelected, setChatIdSelected] = useState<number>();
 
     let [message, setMessage] = useState<string>("");
 
     const [isNavHidden, setIsNavHidden] = useState<boolean>(true)
 
-    const [selectedChat, setSelectedChat] = useState<ChatType>(
-        {
-        "name": "Atesh ma maiko", 
-        "messages": [
-                {
-                    "author": "USER",
-                    "content": "This is an example user promp"
-                },
-                {
-                    "author": "AI",
-                    "content": "This is an example ai response"
-                },
-                {
-                    "author": "USER",
-                    "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-                },
-                {
-                    "author": "USER",
-                    "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-                }
-            ]
-     
-        }
-    )
+    const [selectedChat, setSelectedChat] = useState<ChatType>()
 
-    const handelNewMessage = (e: React.FormEvent<HTMLElement>) => {
-        e.preventDefault();
-
-        setSelectedChat({
-                "name": selectedChat.name,
-                "messages": [...selectedChat?.messages, {author: "USER", content: message}]
-            })
-
-        setMessage("")
-    };
+    useEffect(() => {
+        chatAPI.getChatHystory().then((data) => {
+            setChatHistory(data.data.reverse());
+        });
+    }, []);
 
     useEffect(() => {
         if(!isNavHidden)
@@ -73,6 +49,45 @@ export default function Chat() {
         document.body.classList.remove("overflow-hidden")
 
     }, [isNavHidden])
+
+    useEffect(() => {
+        chatAPI.getChat(chatIdSelected).then((data) => {
+            setSelectedChat(data.data)
+        })
+    }, [chatIdSelected])
+    
+    const handleNewChat = () => {
+        chatAPI.createNewChat(newChatName).then((data) => {
+            chatAPI.getChatHystory().then((data) => {
+                setChatHistory(data.data.reverse());
+            });
+        });
+
+        setNewChatName("");
+        setIsNewChatOpened(false);
+    }
+
+    const handleNewMessage = (e: React.FormEvent<HTMLElement>) => {
+        e.preventDefault();
+
+        if (!chatIdSelected || !message || message === "") {
+            return;
+        }
+
+        const newMessage: Message = {
+            "chat_id": chatIdSelected,
+            "content": message,
+            "author": "USER",
+        }
+
+        messagesAPI.createMessage(newMessage).then(() => {
+            chatAPI.getChat(chatIdSelected).then((data) => {
+                setSelectedChat(data.data)
+            })
+        });
+
+        setMessage("");
+    }
 
     return (
         <>
@@ -102,11 +117,9 @@ export default function Chat() {
                         </div>
 
                         <div className="flex items-center w-full gap-2 mt-[36px]">
-                            <Dialog>
+                            <Dialog open={isNewChatOpened}>
                                 <DialogTrigger asChild>
-                                    <Button
-                                        className={`bg-gradient-to-r from-[#1E1E1F] to-[#6218DC] text-white p-6 w-full rounded-[36px]'} font-black`}
-                                    >
+                                    <Button onClick={() => {setIsNewChatOpened(true)}} className={`bg-gradient-to-r from-[#1E1E1F] to-[#6218DC] text-white p-6 w-full rounded-[36px]'} font-black`}>
                                         + New chat
                                     </Button>
                                 </DialogTrigger>
@@ -121,9 +134,10 @@ export default function Chat() {
                                             onChange={(e) =>
                                                 setNewChatName(e.target.value)
                                             }
+                                            value={newChatName}
                                         />
                                     </div>
-                                    <Button>New Chat</Button>
+                                    <Button onClick={handleNewChat}>New Chat</Button>
                                 </DialogContent>
                             </Dialog>
 
@@ -135,7 +149,7 @@ export default function Chat() {
                             </Button>
                         </div>
                         <div className="flex gap-8 items-center my-[24px] py-[20px] relative before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-[1px] before:bg-zinc-600 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-zinc-600">
-                            <p>You conversations</p>
+                            <p>Your conversations</p>
                             <Button
                                 variant="link"
                                 className={`text-purple-500`}
@@ -143,9 +157,9 @@ export default function Chat() {
                                 Clear All
                             </Button>
                         </div>
-                        <ScrollArea className="h-full flex flex-col overflow-auto ">
-                            {chatHistory.map((chat: any) => {
-                                return <ChatEntry chatTitle={chat[2]} />;
+                        <ScrollArea className="h-full flex flex-col overflow-auto w-full">
+                            {chatHistory.map((chat: ChatHystoryType) => {
+                                return <ChatEntry onclick={() => setChatIdSelected(chat.id)} chatTitle={chat.name} selected={chat.id == chatIdSelected} />;
                             })}
                         </ScrollArea>
                     </div>
@@ -162,7 +176,7 @@ export default function Chat() {
                     </div>
 
                     <form
-                        onSubmit={handelNewMessage}
+                        onSubmit={handleNewMessage}
                         className={`bg-gray-900 fixed bottom-5 text-black w-[50%] z-10 h-[100px] rounded-xl max-lg:w-[90%] flex gap-5 p-6 items-center`}
                     >
                         <Textarea

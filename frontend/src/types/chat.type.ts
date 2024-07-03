@@ -7,3 +7,8 @@ export type ChatType = {
     name: string,
     messages: Message[]
 } 
+
+export type ChatHystoryType = {
+    id: number,
+    name: string
+}
