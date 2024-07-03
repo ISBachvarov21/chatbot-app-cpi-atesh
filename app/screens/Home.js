@@ -10,17 +10,33 @@ import {
   Modal,
   View,
   Pressable,
-  Alert,
-  ScrollView,
-  SafeAreaView
+  FlatList
 } from "react-native";
+
+const DATA = [
+  {
+    id:"1",
+    title: "Chat with ai"
+  },
+  
+]
+
+const Item =({title}) => {
+  return(
+  <View style={styles.example}>
+    <Text style={styles.chatTitle}>{title}</Text>
+  </View>)
+} 
 
 export default function Home({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
+
+ 
+
   return (
 
 
-    <LinearGradient colors={["#FF686B", "#7678ED"]} style={styles.screen}>
+    <LinearGradient colors={['#BDC0C6', '#7678ED']} style={styles.screen}>
       <Modal
         animationType="slide"
         transparent={true}
@@ -48,12 +64,14 @@ export default function Home({ navigation }) {
       <TouchableOpacity style={styles.addBtn} onPress={() => setModalVisible(true)}>
         <Text style={styles.plusSymb}>+</Text>
       </TouchableOpacity>
-      <ScrollView contentContainerStyle={styles.chatRooms}>
-        <View style={styles.example}>
-          <Text style={styles.chatTitle}>Title</Text>
-        </View>
-      </ScrollView>
-
+      <View style={styles.chatContainer}>
+        <FlatList
+          data={DATA}
+          renderItem={({item}) => <Item title={item.title} />}
+          keyExtractor={item => item.id}
+          contentContainerStyle={styles.chatRooms}
+        />
+      </View>
 
     </LinearGradient>
   );
@@ -125,13 +143,15 @@ const styles = StyleSheet.create({
   infoBox: {
     fontSize: 22
   },
-  chatRooms: {
-    height: 500,
-    width: 300,
-    marginTop:50,
-    backgroundColor: "white",
+  chatContainer:{
     alignItems:"center",
-    borderRadius:20
+
+    height:500,
+    width: 300,
+    marginTop: 50,
+    backgroundColor: "white",
+    borderRadius: 20,
+
   },
   example: {
     width: 270,
@@ -141,6 +161,7 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     justifyContent:"center"
   },
+
   chatTitle:{
     color:"white",
     marginLeft:10,
