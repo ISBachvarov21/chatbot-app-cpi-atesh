@@ -17,9 +17,11 @@ import { MessageType, ChatType, ChatHystoryType } from "@/types/chat.type";
 import ResponseMessage from "@/components/ResponseMessage";
 import { chatAPI } from "@/apis/chatAPI";
 import { messagesAPI, Message } from "@/apis/messagesAPI";
+import { UserType } from "@/types/user.type";
+import { userAPI } from "@/apis/userAPI";
 
 export default function Chat() {
-    const [user, setUser] = useState<string>("User");
+    const [user, setUser] = useState<UserType>();
     const [chatHistory, setChatHistory] = useState<ChatHystoryType[]>([]);
     const [newChatName, setNewChatName] = useState<string>("");
     const [isNewChatOpened, setIsNewChatOpened] = useState<boolean>(false);
@@ -30,6 +32,12 @@ export default function Chat() {
     const [isNavHidden, setIsNavHidden] = useState<boolean>(true)
 
     const [selectedChat, setSelectedChat] = useState<ChatType>()
+
+    useEffect(() => {
+        userAPI.getUser().then((data) => {
+            setUser(data);
+        });
+    }, []);
 
     useEffect(() => {
         chatAPI.getChatHystory().then((data) => {
@@ -51,13 +59,15 @@ export default function Chat() {
     }, [isNavHidden])
 
     useEffect(() => {
+        if (!chatIdSelected) return
+
         chatAPI.getChat(chatIdSelected).then((data) => {
             setSelectedChat(data.data)
         })
     }, [chatIdSelected])
     
     const handleNewChat = () => {
-        chatAPI.createNewChat(newChatName).then((data) => {
+        chatAPI.createNewChat(newChatName).then(() => {
             chatAPI.getChatHystory().then((data) => {
                 setChatHistory(data.data.reverse());
             });
@@ -81,6 +91,8 @@ export default function Chat() {
         }
 
         messagesAPI.createMessage(newMessage).then(() => {
+            if( !chatIdSelected ) return
+
             chatAPI.getChat(chatIdSelected).then((data) => {
                 setSelectedChat(data.data)
             })
@@ -88,6 +100,30 @@ export default function Chat() {
 
         setMessage("");
     }
+
+    const handleClearChats = () => {
+        chatAPI.deleteAllChats().then(() => {
+            chatAPI.getChatHystory().then((data) => {
+                setChatHistory(data.data.reverse());
+                setSelectedChat(undefined)
+                setChatIdSelected(undefined)
+            });
+        });
+    }
+
+    const handleDeleteChat = (id: number) => {
+        chatAPI.deleteChat(id).then(() => {
+            chatAPI.getChatHystory().then((data) => {
+                setChatHistory(data.data.reverse());
+
+                if (chatIdSelected === id)
+                {
+                    setChatIdSelected(undefined)
+                    setSelectedChat(undefined)
+                }
+            });
+        });
+    };
 
     return (
         <>
@@ -111,9 +147,9 @@ export default function Chat() {
                         <div className="flex gap-4 items-center border border-pink-50 w-full p-2 px-4 rounded-[36px] max-lg:mt-5">
                             <Avatar className="text-black">
                                 <AvatarImage src="" />
-                                <AvatarFallback>IS</AvatarFallback>
+                                <AvatarFallback><img src={`https://ui-avatars.com/api/?name=${user?.username}&size=128`} alt="" /></AvatarFallback>
                             </Avatar>
-                            <h1>{user}</h1>
+                            <h1>{user?.username}</h1>
                         </div>
 
                         <div className="flex items-center w-full gap-2 mt-[36px]">
@@ -137,29 +173,33 @@ export default function Chat() {
                                             value={newChatName}
                                         />
                                     </div>
-                                    <Button onClick={handleNewChat}>New Chat</Button>
+                                    <div className="flex flex-col gap-2">
+                                        <Button onClick={handleNewChat}>New Chat</Button>
+                                        <Button onClick={() => {setIsNewChatOpened(false)}} variant="destructive">Close</Button>
+                                    </div>
                                 </DialogContent>
                             </Dialog>
 
-                            <Button
+                            {/* <Button
                                 size="icon"
                                 className="rounded-full h-full w-[64px]"
                             >
                                 <Search />
-                            </Button>
+                            </Button> */}
                         </div>
                         <div className="flex gap-8 items-center my-[24px] py-[20px] relative before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-[1px] before:bg-zinc-600 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-zinc-600">
                             <p>Your conversations</p>
                             <Button
                                 variant="link"
                                 className={`text-purple-500`}
+                                onClick={handleClearChats}
                             >
                                 Clear All
                             </Button>
                         </div>
                         <ScrollArea className="h-full flex flex-col overflow-auto w-full">
                             {chatHistory.map((chat: ChatHystoryType) => {
-                                return <ChatEntry onclick={() => setChatIdSelected(chat.id)} chatTitle={chat.name} selected={chat.id == chatIdSelected} />;
+                                return <ChatEntry ondelete={() => {handleDeleteChat(chat.id)}} key={chat.id} onclick={() => setChatIdSelected(chat.id)} chatTitle={chat.name} selected={chat.id == chatIdSelected} />;
                             })}
                         </ScrollArea>
                     </div>
@@ -175,7 +215,7 @@ export default function Chat() {
 
                     </div>
 
-                    <form
+                    {selectedChat != undefined && <form
                         onSubmit={handleNewMessage}
                         className={`bg-gray-900 fixed bottom-5 text-black w-[50%] z-10 h-[100px] rounded-xl max-lg:w-[90%] flex gap-5 p-6 items-center`}
                     >
@@ -190,7 +230,7 @@ export default function Chat() {
                         >
                             <Send />
                         </Button>
-                    </form>
+                    </form>}
                 </div>
             </div>
         </>

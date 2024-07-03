@@ -2,9 +2,10 @@ import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
-import { Toaster } from "@/components/ui/toaster"
-import { useToast } from "@/components/ui/use-toast"
 import { userAPI, SignUpData } from "../apis/userAPI"
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function SignUp() {
     const [userNameVal, setUserName] = useState<string>('')
@@ -13,17 +14,12 @@ export default function SignUp() {
 
     const navigator = useNavigate();
 
-    const { toast } = useToast()
-
     const handleSignUp = (e: any) => {
         e.preventDefault()
 
         if(passwordVal != confirmPassword)
         {
-            toast({
-              title: "Password not matching"
-            }) 
-
+            toast('Passwords do not match')
             return
         }
 
@@ -34,8 +30,9 @@ export default function SignUp() {
 
         userAPI.signUp(data).then(() => {
             navigator('/signin')
+        }).catch((err) => {
+            toast(err.response.data.detail)
         })
-            
     }
 
     return (
@@ -84,7 +81,7 @@ export default function SignUp() {
                 </div>
             </div>
 
-            <Toaster />
+            <ToastContainer />
         </>
     )
 }
