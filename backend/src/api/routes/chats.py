@@ -63,3 +63,43 @@ async def get_user_chat(token: Annotated[str, Depends(oauth2_scheme)], chat_id: 
     
     except InvalidTokenError:
         return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+    
+
+@router.delete("/delete/chat/{chat_id}", tags=["chats"])
+async def delete_user_chat(token: Annotated[str, Depends(oauth2_scheme)], chat_id: int):
+    try:
+        payload = jwt.decode(token, os.getenv("RSA_PUBLIC_KEY"), algorithms=["RS256"])
+        username: str = payload["iss"]
+
+        db.db_chats.delete_chat(username, chat_id)
+        
+    except InvalidTokenError:
+        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+    
+@router.delete("/delete/chats", tags=["chats"])
+async def delete_all_user_chats(token: Annotated[str, Depends(oauth2_scheme)]):
+    try:
+        payload = jwt.decode(token, os.getenv("RSA_PUBLIC_KEY"), algorithms=["RS256"])
+        username: str = payload["iss"]
+
+        db.db_chats.delete_all_chats(username)
+    
+    except InvalidTokenError:
+        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+    
+@router.get("/search/chats", tags=["chats"])
+async def search_all_user_chats(token: Annotated[str, Depends(oauth2_scheme)], query: str = ""):
+    try:
+        payload = jwt.decode(token, os.getenv("RSA_PUBLIC_KEY"), algorithms=["RS256"])
+        username: str = payload["iss"]
+
+        chats = db.db_chats.search_all_chats(username, query)
+        returnable_chats = []
+
+        for chat in chats:
+            returnable_chats.append({"id": chat["id"], "name": chat["name"]})
+
+        return returnable_chats
+
+    except InvalidTokenError:
+        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
