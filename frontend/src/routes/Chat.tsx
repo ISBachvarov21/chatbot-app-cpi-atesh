@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import ChatEntry from "@/components/ChatEntry";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     Dialog,
     DialogContent,
@@ -19,6 +18,7 @@ import { chatAPI } from "@/apis/chatAPI";
 import { messagesAPI, Message } from "@/apis/messagesAPI";
 import { UserType } from "@/types/user.type";
 import { userAPI } from "@/apis/userAPI";
+import Profile from "@/components/Profile";
 
 export default function Chat() {
     const [user, setUser] = useState<UserType>();
@@ -38,7 +38,7 @@ export default function Chat() {
         userAPI.getUser().then((data) => {
             setUser(data);
         });
-        
+
         chatAPI.getChatHystory().then((data) => {
             setChatHistory(data.data.reverse());
         });
@@ -168,13 +168,7 @@ export default function Chat() {
                             <div className="w-full bg-white h-1 -rotate-45 translate-y-1 rounded-2xl"></div>
                         </div>
 
-                        <div className="flex gap-4 items-center border border-pink-50 w-full p-2 px-4 rounded-[36px] max-lg:mt-5">
-                            <Avatar className="text-black">
-                                <AvatarImage src="" />
-                                <AvatarFallback><img src={`https://ui-avatars.com/api/?name=${user?.username}&size=128`} alt="" /></AvatarFallback>
-                            </Avatar>
-                            <h1>{user?.username}</h1>
-                        </div>
+                        <Profile username={user?.username} />
 
                         <div className="flex items-center w-full gap-2 mt-[36px]">
                             <Dialog open={isNewChatOpened}>
@@ -203,14 +197,8 @@ export default function Chat() {
                                     </div>
                                 </DialogContent>
                             </Dialog>
-
-                            {/* <Button
-                                size="icon"
-                                className="rounded-full h-full w-[64px]"
-                            >
-                                <Search />
-                            </Button> */}
                         </div>
+
                         <div className="flex gap-8 items-center my-[24px] py-[20px] relative before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-[1px] before:bg-zinc-600 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-zinc-600">
                             <p>Your conversations</p>
                             <Button
@@ -228,6 +216,7 @@ export default function Chat() {
                         </ScrollArea>
                     </div>
                 </div>
+                
                 <div className="w-4/5 max-lg:w-full min-h-[80%] items-center flex flex-col m-5 relative rounded-2xl text-white">
 
                     <div className={`text-white mb-[25%] w-full min-h-full flex flex-col p-4 pt-10 lg:p-16 gap-6`}>
