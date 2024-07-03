@@ -26,7 +26,7 @@ async def get_user_chats(token: Annotated[str, Depends(oauth2_scheme)]):
         return returnable_chats
     
     except InvalidTokenError:
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
     
 @router.post("/create/chat", tags=["chats"])
 async def create_user_chat(token: Annotated[str, Depends(oauth2_scheme)], chat: models.chat_im.ChatIM):
@@ -39,7 +39,7 @@ async def create_user_chat(token: Annotated[str, Depends(oauth2_scheme)], chat: 
         return new_chat
     
     except InvalidTokenError:
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
 
 @router.get("/get/chat/{chat_id}", tags=["chats"])
 async def get_user_chat(token: Annotated[str, Depends(oauth2_scheme)], chat_id: int):
@@ -62,7 +62,7 @@ async def get_user_chat(token: Annotated[str, Depends(oauth2_scheme)], chat_id: 
         }
     
     except InvalidTokenError:
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
     
 
 @router.delete("/delete/chat/{chat_id}", tags=["chats"])
@@ -74,7 +74,7 @@ async def delete_user_chat(token: Annotated[str, Depends(oauth2_scheme)], chat_i
         db.db_chats.delete_chat(username, chat_id)
         
     except InvalidTokenError:
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
     
 @router.delete("/delete/chats", tags=["chats"])
 async def delete_all_user_chats(token: Annotated[str, Depends(oauth2_scheme)]):
@@ -85,7 +85,7 @@ async def delete_all_user_chats(token: Annotated[str, Depends(oauth2_scheme)]):
         db.db_chats.delete_all_chats(username)
     
     except InvalidTokenError:
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
     
 @router.get("/search/chats", tags=["chats"])
 async def search_all_user_chats(token: Annotated[str, Depends(oauth2_scheme)], query: str = ""):
@@ -102,4 +102,4 @@ async def search_all_user_chats(token: Annotated[str, Depends(oauth2_scheme)], q
         return returnable_chats
 
     except InvalidTokenError:
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
