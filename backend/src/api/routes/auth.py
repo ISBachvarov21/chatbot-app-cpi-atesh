@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from models.user_im import UserIM
 from models.token import Token
-from db.user import authenticate_user, create_user
+from db.db_users import authenticate_user, create_user
 import jwt
 from dotenv import load_dotenv
 import os
@@ -29,8 +29,8 @@ async def login(user_im: UserIM):
     return Token(access_token=token, token_type="bearer")
 
 @router.post("/token", tags=["auth"])
-async def token(user_im: UserIM):
-    user = authenticate_user(user_im.username, user_im.password)
+async def token(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
