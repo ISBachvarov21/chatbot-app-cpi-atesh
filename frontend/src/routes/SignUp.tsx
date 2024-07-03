@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
@@ -13,6 +13,12 @@ export default function SignUp() {
     const [confirmPassword, setConfirmPassword] = useState<string>('')
 
     const navigator = useNavigate();
+
+    useEffect(() => {
+        if(localStorage.getItem('token')) {
+            navigator('/chat')
+        }
+    }, [])
 
     const handleSignUp = (e: any) => {
         e.preventDefault()

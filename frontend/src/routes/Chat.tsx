@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Search, Send } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Send } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import ChatEntry from "@/components/ChatEntry";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -32,17 +32,17 @@ export default function Chat() {
     const [isNavHidden, setIsNavHidden] = useState<boolean>(true)
 
     const [selectedChat, setSelectedChat] = useState<ChatType>()
+    const formRef = useRef<HTMLFormElement>(null);
 
     useEffect(() => {
         userAPI.getUser().then((data) => {
             setUser(data);
         });
-    }, []);
-
-    useEffect(() => {
+        
         chatAPI.getChatHystory().then((data) => {
             setChatHistory(data.data.reverse());
         });
+
     }, []);
 
     useEffect(() => {
@@ -79,11 +79,35 @@ export default function Chat() {
 
     const handleNewMessage = (e: React.FormEvent<HTMLElement>) => {
         e.preventDefault();
-
-        if (!chatIdSelected || !message || message === "") {
+        
+        if (!message || message === "") {
             return;
         }
 
+        if(!chatIdSelected) {
+            chatAPI.createNewChat(message.substring(0, 20)).then((data) => {
+                chatAPI.getChatHystory().then((data) => {
+                    setChatHistory(data.data.reverse());
+                });
+
+                setChatIdSelected(data.data.id)
+
+                const newMessage: Message = {
+                    "chat_id": data.data.id,
+                    "content": message,
+                    "author": "USER",
+                }
+
+                messagesAPI.createMessage(newMessage).then(() => {
+                    chatAPI.getChat(data.data.id).then((data) => {
+                        setSelectedChat(data.data)
+                    })
+                });
+
+                return
+            });
+        }
+        
         const newMessage: Message = {
             "chat_id": chatIdSelected,
             "content": message,
@@ -215,12 +239,14 @@ export default function Chat() {
 
                     </div>
 
-                    {selectedChat != undefined && <form
+                    <form
                         onSubmit={handleNewMessage}
+                        ref={formRef}
                         className={`bg-gray-900 fixed bottom-5 text-black w-[50%] z-10 h-[100px] rounded-xl max-lg:w-[90%] flex gap-5 p-6 items-center`}
                     >
                         <Textarea
-                            onChange={(e) => setMessage(e.target.value)}
+                            onKeyDown={(e) => {if(e.key === "Enter") {formRef.current?.requestSubmit()}}}
+                            onChange={(e) => {setMessage(e.target.value);}}
                             className="resize-none border-none outline-none h-full focus:outline-none text-white"
                             value={message}
                         />
@@ -230,7 +256,7 @@ export default function Chat() {
                         >
                             <Send />
                         </Button>
-                    </form>}
+                    </form>
                 </div>
             </div>
         </>

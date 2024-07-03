@@ -1,9 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
-import { Toaster } from "@/components/ui/toaster"
-import { useToast } from "@/components/ui/use-toast"
 import { userAPI, SignUpData } from '@/apis/userAPI'
 
 export default function SignIn() {
@@ -12,7 +10,11 @@ export default function SignIn() {
 
     const navigator = useNavigate();
 
-    const { toast } = useToast()
+    useEffect(() => {
+        if(localStorage.getItem('token')) {
+            navigator('/chat')
+        }
+    }, [])
 
     const handleSignUp = (e: any) => {
         e.preventDefault()
@@ -23,8 +25,8 @@ export default function SignIn() {
         }
 
         userAPI.signIn(data).then((data) => {
-            navigator('/chat')
             localStorage.setItem('token', data.access_token)    
+            window.location.href = '/chat'
         })
     }
 
@@ -68,8 +70,6 @@ export default function SignIn() {
                     </div>
                 </div>
             </div>
-
-            <Toaster />
         </>
     )
 }
