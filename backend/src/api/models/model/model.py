@@ -16,7 +16,7 @@ def format_docs(docs):
 warnings.filterwarnings("ignore")
 logging.getLogger().setLevel(logging.ERROR)
 
-os.environ["HUGGINGFACEHUB_API_TOKEN"] = "hf_xxx" # replace "xxx" with your Hugging Face API token
+os.environ["HUGGINGFACEHUB_API_TOKEN"] = "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" # replace "xxx" with your Hugging Face API token
 
 repo_id = "meta-llama/Meta-Llama-3-8B-Instruct"
 
@@ -40,7 +40,7 @@ print("\u001b[1;32mLoaded LLM model successfully!\u001b[0m")
 
 data = list()
 
-data = TextLoader("data.txt", encoding='utf-8').load()
+data = TextLoader("src/api/models/model/data.txt", encoding='utf-8').load()
 
 text_splitter = CharacterTextSplitter(separator='<end>',chunk_size=500, chunk_overlap=200)
 docs = text_splitter.split_documents(data)
@@ -61,12 +61,3 @@ rag_chain = (
     | prompt
     | llm
 )
-
-# documents = retriever.invoke("When was VSCPI opened?")
-
-# for doc in documents:
-#     print(doc.page_content)
-
-print("\u001b[1;32mLoaded RAG chain successfully!\u001b[0m")
-print("\u001b[1;34mGetting answer...\u001b[0m")
-print(f"\n\u001b[1;32mAI:{rag_chain.invoke("When did VSCPI open?")}\u001b[0m")
