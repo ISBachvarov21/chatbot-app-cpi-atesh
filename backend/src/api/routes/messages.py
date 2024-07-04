@@ -30,4 +30,4 @@ async def create_message(token: Annotated[str, Depends(oauth2_scheme)], message:
         return response
 
     except InvalidTokenError:
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
