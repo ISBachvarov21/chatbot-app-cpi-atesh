@@ -222,7 +222,7 @@ export default function Chat() {
                     <div className={`text-white mb-[25%] w-full min-h-full flex flex-col p-4 pt-10 lg:p-16 gap-6`}>
                         {
                             selectedChat?.messages.map((item: MessageType) => {
-                                return <ResponseMessage username={user?.username} content={item.content} />
+                                return <ResponseMessage author={item.author} username={user?.username} content={item.content} />
                             })
                         }
 
