@@ -10,8 +10,8 @@ export default function Profile({ username, className }: { username: string | un
                 <AvatarFallback><img src={`https://ui-avatars.com/api/?name=${username}&size=128`} alt="" /></AvatarFallback>
             </Avatar>
             <h1>{username}</h1>
-            <Button onClick={() => {localStorage.clear(); window.location.reload()}} variant="destructive" size="icon" className="right-6 absolute">
-                <LogOut />
+            <Button onClick={() => {localStorage.clear(); window.location.reload()}} variant="destructive" size="icon" className="right-6 [&>*]:hover:text-[#e74c4c] hover:bg-[#d1d5db] absolute">
+                <LogOut className="duration-100"/>
             </Button>
         </div>
     )
