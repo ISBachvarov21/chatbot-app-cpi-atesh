@@ -5,7 +5,7 @@ export type MessageType = {
 
 export type ChatType = {
     name: string,
-    messages: Message[]
+    messages: MessageType[]
 } 
 
 export type ChatHystoryType = {
