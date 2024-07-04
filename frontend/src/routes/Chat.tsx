@@ -173,7 +173,7 @@ export default function Chat() {
                         <div className="flex items-center w-full gap-2 mt-[36px]">
                             <Dialog open={isNewChatOpened}>
                                 <DialogTrigger asChild>
-                                    <Button onClick={() => {setIsNewChatOpened(true)}} className={`bg-gradient-to-r from-[#1E1E1F] to-[#6218DC] text-white p-6 w-full rounded-[36px]'} font-black`}>
+                                    <Button onClick={() => {setIsNewChatOpened(true)}} className={`bg-[#6218DC] text-white p-6 w-full rounded-[36px]'} font-black hover:bg-[#d1d5db] hover:text-[#6218DC] duration-200`}>
                                         + New chat
                                     </Button>
                                 </DialogTrigger>
@@ -222,7 +222,7 @@ export default function Chat() {
                     <div className={`text-white mb-[25%] w-full min-h-full flex flex-col p-4 pt-10 lg:p-16 gap-6`}>
                         {
                             selectedChat?.messages.map((item: MessageType) => {
-                                return <ResponseMessage author={item.author} content={item.content} />
+                                return <ResponseMessage username={user?.username} content={item.content} />
                             })
                         }
 
@@ -235,7 +235,7 @@ export default function Chat() {
                     >
                         <Textarea
                             onKeyDown={(e) => {if(e.key === "Enter") {formRef.current?.requestSubmit()}}}
-                            onChange={(e) => {setMessage(e.target.value);}}
+                            onChange={(e) => {if(e.target.value === "\n") {return}; setMessage(e.target.value);}}
                             className="resize-none border-none outline-none h-full focus:outline-none text-white"
                             value={message}
                         />
