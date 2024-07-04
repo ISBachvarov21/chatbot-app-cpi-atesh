@@ -47,7 +47,6 @@ jobs:
           name: python-app
           path: |
             backend/release.zip
-            !antenv/
 
   deploy:
     runs-on: ubuntu-latest
