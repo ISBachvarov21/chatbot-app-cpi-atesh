@@ -7,6 +7,7 @@ from typing import Annotated
 import db.db
 import db.db_messages
 import models.message_im
+from models.model.model import rag_chain
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 router = APIRouter()
@@ -17,7 +18,16 @@ async def create_message(token: Annotated[str, Depends(oauth2_scheme)], message:
         payload = jwt.decode(token, os.getenv("RSA_PUBLIC_KEY"), algorithms=["RS256"])
         username: str = payload["iss"]
         
-        return db.db_messages.create_message(message, username)
+        db.db_messages.create_message(message, username)
+
+        response = rag_chain.invoke(message.content)
+
+        message.content = response
+        message.author = "AI"
+
+        db.db_messages.create_message(message, username)
+
+        return response
 
     except InvalidTokenError:
         return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
